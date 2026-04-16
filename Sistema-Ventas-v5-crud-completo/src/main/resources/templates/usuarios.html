@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios</title>
+    <link rel="stylesheet" th:href="@{/css/clientes.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<aside class="sidebar">
+    <div class="sidebar-header"><i class="fas fa-store"></i> Sistema Ventas</div>
+    <nav><ul>
+        <li><a th:href="@{/home}"><i class="fas fa-chart-line"></i> Inicio</a></li>
+        <li><a th:href="@{/ventas}"><i class="fas fa-shopping-cart"></i> Ventas</a></li>
+        <li><a th:href="@{/productos}"><i class="fas fa-box"></i> Productos</a></li>
+        <li><a th:href="@{/cliente}"><i class="fas fa-users"></i> Clientes</a></li>
+        <li><a class="active" th:href="@{/usuarios}"><i class="fas fa-user-shield"></i> Usuarios</a></li>
+        <li><a th:href="@{/detalleventa}"><i class="fas fa-list-alt"></i> Detalle Venta</a></li>
+        <li><a th:href="@{/cerrarsesion}"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+    </ul></nav>
+</aside>
+
+<div class="container">
+    <div class="topbar"><h2><i class="fas fa-user-shield"></i> CRUD de Usuarios</h2></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <div class="grid">
+        <div class="card">
+            <h3 th:text="${editando} ? 'Actualizar usuario' : 'Crear usuario'"></h3>
+            <form th:action="@{/usuarios/guardar}" method="post">
+                <div class="form-grid">
+                    <input type="number" name="codigoUsuario" placeholder="Código" th:value="${usuarioForm.codigoUsuario}" required>
+                    <input type="text" name="username" placeholder="Username" th:value="${usuarioForm.username}" required>
+                    <input type="text" name="password" placeholder="Password" th:value="${usuarioForm.password}" required>
+                    <input type="email" name="email" placeholder="Email" th:value="${usuarioForm.email}" required>
+                    <select name="rol" required>
+                        <option value="ADMIN" th:selected="${usuarioForm.rol == 'ADMIN'}">ADMIN</option>
+                        <option value="VENDEDOR" th:selected="${usuarioForm.rol == 'VENDEDOR'}">VENDEDOR</option>
+                    </select>
+                    <select name="estado" required>
+                        <option value="1" th:selected="${usuarioForm.estado == 1}">Activo</option>
+                        <option value="0" th:selected="${usuarioForm.estado == 0}">Inactivo</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Guardar</button>
+                    <a class="btn btn-secondary" th:href="@{/usuarios}"><i class="fas fa-eraser"></i> Limpiar</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Buscar usuario</h3>
+            <form th:action="@{/usuarios}" method="get">
+                <div class="form-grid">
+                    <input type="number" name="buscar" placeholder="Buscar por código" th:value="${buscar}">
+                </div>
+                <div class="search-actions">
+                    <button class="btn btn-success" type="submit"><i class="fas fa-search"></i> Buscar</button>
+                    <a class="btn btn-secondary" th:href="@{/usuarios}"><i class="fas fa-rotate-left"></i> Mostrar todos</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-header"><strong>Listado de usuarios</strong><span th:text="'Registros: ' + ${#lists.size(usuarios)}"></span></div>
+        <table>
+            <thead>
+            <tr><th>Código</th><th>Username</th><th>Email</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="usuario : ${usuarios}">
+                <td th:text="${usuario.codigoUsuario}"></td>
+                <td th:text="${usuario.username}"></td>
+                <td th:text="${usuario.email}"></td>
+                <td th:text="${usuario.rol}"></td>
+                <td><span class="estado" th:classappend="${usuario.estado == 1} ? ' activo' : ' inactivo'" th:text="${usuario.estado == 1} ? 'Activo' : 'Inactivo'"></span></td>
+                <td>
+                    <div class="row-actions">
+                        <a class="btn btn-warning" th:href="@{/usuarios(editar=${usuario.codigoUsuario})}"><i class="fas fa-edit"></i> Actualizar</a>
+                        <form class="inline-form" th:action="@{/usuarios/eliminar/{id}(id=${usuario.codigoUsuario})}" method="post">
+                            <button class="btn btn-danger" type="submit" onclick="return confirm('¿Eliminar este usuario?')"><i class="fas fa-trash"></i> Borrar</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(usuarios)}"><td colspan="6" class="empty">No hay usuarios registrados</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <i class="fas fa-store"></i> Sistema Ventas
+    </div>
+    <nav>
+        <ul>
+            <li><a class="active" th:href="@{/home}"><i class="fas fa-chart-line"></i> Inicio</a></li>
+            <li><a th:href="@{/ventas}"><i class="fas fa-shopping-cart"></i> Ventas</a></li>
+            <li><a th:href="@{/productos}"><i class="fas fa-box"></i> Productos</a></li>
+            <li><a th:href="@{/cliente}"><i class="fas fa-users"></i> Clientes</a></li>
+            <li><a th:href="@{/usuarios}"><i class="fas fa-user-shield"></i> Usuarios</a></li>
+            <li><a th:href="@{/detalleventa}"><i class="fas fa-list-alt"></i> Detalle Venta</a></li>
+            <li><a th:href="@{/cerrarsesion}"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<!-- Barra superior derecha con usuario -->
+<div class="topbar">
+    <div class="user-info">
+        <span th:text="'Hola, ' + ${session.usuarioLogeado}">Hola, usuario</span>
+        <!-- Si es admin, muestra foto personal; si no, icono por defecto -->
+        <div class="user-avatar" th:if="${session.rolUsuario == 'admin'}">
+            <img src="https://ui-avatars.com/api/?name=Admin&background=0d6efd&color=fff&size=40&rounded=true" alt="Admin" class="avatar-img">
+            <span class="badge-admin">Admin</span>
+        </div>
+        <div class="user-avatar" th:unless="${session.rolUsuario == 'admin'}">
+            <i class="fas fa-user-circle fa-2x" style="color: #adb5bd;"></i>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h1>Bienvenidos a la página principal</h1>
+    <p>Este es el menú principal desde donde se controla todo.</p>
+</div>
+
+</body>
+</html>

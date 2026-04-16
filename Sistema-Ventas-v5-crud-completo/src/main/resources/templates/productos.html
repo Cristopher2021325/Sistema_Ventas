@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos</title>
+    <link rel="stylesheet" th:href="@{/css/clientes.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<aside class="sidebar">
+    <div class="sidebar-header"><i class="fas fa-store"></i> Sistema Ventas</div>
+    <nav><ul>
+        <li><a th:href="@{/home}"><i class="fas fa-chart-line"></i> Inicio</a></li>
+        <li><a th:href="@{/ventas}"><i class="fas fa-shopping-cart"></i> Ventas</a></li>
+        <li><a class="active" th:href="@{/productos}"><i class="fas fa-box"></i> Productos</a></li>
+        <li><a th:href="@{/cliente}"><i class="fas fa-users"></i> Clientes</a></li>
+        <li><a th:href="@{/usuarios}"><i class="fas fa-user-shield"></i> Usuarios</a></li>
+        <li><a th:href="@{/detalleventa}"><i class="fas fa-list-alt"></i> Detalle Venta</a></li>
+        <li><a th:href="@{/cerrarsesion}"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a></li>
+    </ul></nav>
+</aside>
+
+<div class="container">
+    <div class="topbar"><h2><i class="fas fa-box"></i> CRUD de Productos</h2></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <div class="grid">
+        <div class="card">
+            <h3 th:text="${editando} ? 'Actualizar producto' : 'Crear producto'"></h3>
+            <form th:action="@{/productos/guardar}" method="post">
+                <div class="form-grid">
+                    <input type="number" name="codigoProducto" placeholder="Código" th:value="${productoForm.codigoProducto}" required>
+                    <input type="text" name="nombreProducto" placeholder="Nombre" th:value="${productoForm.nombreProducto}" required>
+                    <input type="number" step="0.01" min="0" name="precio" placeholder="Precio" th:value="${productoForm.precio}" required>
+                    <input type="number" min="0" name="stock" placeholder="Stock" th:value="${productoForm.stock}" required>
+                    <select name="estado" required>
+                        <option value="1" th:selected="${productoForm.estado == 1}">Activo</option>
+                        <option value="0" th:selected="${productoForm.estado == 0}">Inactivo</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Guardar</button>
+                    <a class="btn btn-secondary" th:href="@{/productos}"><i class="fas fa-eraser"></i> Limpiar</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Buscar producto</h3>
+            <form th:action="@{/productos}" method="get">
+                <div class="form-grid">
+                    <input type="number" name="buscar" placeholder="Buscar por código" th:value="${buscar}">
+                </div>
+                <div class="search-actions">
+                    <button class="btn btn-success" type="submit"><i class="fas fa-search"></i> Buscar</button>
+                    <a class="btn btn-secondary" th:href="@{/productos}"><i class="fas fa-rotate-left"></i> Mostrar todos</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-header"><strong>Listado de productos</strong><span th:text="'Registros: ' + ${#lists.size(productos)}"></span></div>
+        <table>
+            <thead>
+            <tr><th>Código</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="producto : ${productos}">
+                <td th:text="${producto.codigoProducto}"></td>
+                <td th:text="${producto.nombreProducto}"></td>
+                <td th:text="'Q ' + ${producto.precio}"></td>
+                <td th:text="${producto.stock}"></td>
+                <td><span class="estado" th:classappend="${producto.estado == 1} ? ' activo' : ' inactivo'" th:text="${producto.estado == 1} ? 'Activo' : 'Inactivo'"></span></td>
+                <td>
+                    <div class="row-actions">
+                        <a class="btn btn-warning" th:href="@{/productos(editar=${producto.codigoProducto})}"><i class="fas fa-edit"></i> Actualizar</a>
+                        <form class="inline-form" th:action="@{/productos/eliminar/{id}(id=${producto.codigoProducto})}" method="post">
+                            <button class="btn btn-danger" type="submit" onclick="return confirm('¿Eliminar este producto?')"><i class="fas fa-trash"></i> Borrar</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(productos)}"><td colspan="6" class="empty">No hay productos registrados</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

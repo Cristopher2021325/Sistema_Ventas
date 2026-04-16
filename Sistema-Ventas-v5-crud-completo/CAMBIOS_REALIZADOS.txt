@@ -1,0 +1,46 @@
+CAMBIOS REALIZADOS
+
+1. Se corrigió ProductoServiceImplements:
+   - getAllProducto() ahora devuelve productoRepository.findAll().
+   - Antes devolvía List.of(), por eso la tabla podía salir vacía.
+
+2. Se creó CRUD web completo para estas entidades:
+   - Clientes
+   - Productos
+   - Usuarios
+   - Ventas
+   - Detalle de venta
+
+3. En cada módulo se agregó:
+   - Crear
+   - Buscar por ID principal
+   - Actualizar
+   - Borrar
+
+4. Se rehízo la vista de cada módulo para que los botones funcionen desde Thymeleaf:
+   - cliente.html
+   - productos.html
+   - usuarios.html
+   - ventas.html
+   - detalleventa.html
+
+5. Se actualizaron los controladores de vistas para soportar:
+   - listado
+   - búsqueda
+   - edición por parámetro
+   - guardado
+   - eliminación
+
+6. Se mejoró el archivo application.properties para permitir credenciales por variables de entorno:
+   - DB_URL
+   - DB_USERNAME
+   - DB_PASSWORD
+
+7. Se agregó un SQL actualizado con:
+   - 5 clientes nuevos
+   - 1 venta nueva
+   - 2 detalles para esa venta nueva
+
+IMPORTANTE
+- En este entorno no fue posible compilar con Maven porque el wrapper intenta descargar dependencias de internet y aquí no hay acceso a red.
+- Los cambios quedaron listos en código fuente para que los pruebes en tu máquina con tu base de datos MySQL.
